@@ -2,7 +2,6 @@ from tp1_funciones_Flores import crear_matriz, imprimir_matriz, extension_pasto,
 
 N = 25 # matriz = NxN
 dc = 0.12 # densidad inicial de conejos
-dz = 0.20 # densidad inicial de zorros
 dp = 0.35 # densidad inicial de pasto
 ec = 5 # energia inicial de los conejos
 ez = 12 # energia inicial de los zorros
@@ -49,3 +48,36 @@ edad_muertes = {
 if animal["energia"] == 0:
     edad_muertes[animal].append(animal[edad])
     cant_muertes[animal] +=1
+    
+    
+    
+dz = 0.20 # densidad inicial de zorros
+
+dz = 0.01
+simulaciones_a_realizar = 50 
+
+
+matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto)
+
+
+while dz < 0.39:
+    num_extinciones = 0 
+    for i in range(simulaciones_a_realizar): 
+        copia_matriz = snapshot(matriz)
+        
+     #Realizo la simulación
+        movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes)
+        movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes)
+        
+        reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
+        reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
+        
+        extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
+        
+        # Evalúa la condición de fin de simulación
+        if len(mapa_cordenadas["conejos"]) == 0 or len(mapa_cordenadas["zorros"]) == 0:
+            num_extinciones += 1
+    
+    porcentaje_extinción = (num_extinciones * 100)/simulaciones_a_realizar
+    print(porcentaje_extinción)
+    dz += 0.02
