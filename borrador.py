@@ -1,6 +1,5 @@
 from tp1_funciones_Flores import crear_matriz, imprimir_matriz, extension_pasto, movimiento_animales, reproduccion_animales, snapshot
 
-
 N = 25 # matriz = NxN
 dc = 0.12 # densidad inicial de conejos
 dz = 0.20 # densidad inicial de zorros
@@ -45,19 +44,8 @@ edad_muertes = {
     "zorro": edad_muerte_zorros,
 }
 
-matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto)
-for turnos in range(100):
-     copia_matriz = snapshot(matriz)
-    
-    # Se pasa la matriz, el mapa y las variables que necesitan
-     movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc)
-     movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz)
-    
-     reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
-     reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
-    
-     extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
 
-print(edad_muertes)
-     
-     
+
+if animal["energia"] == 0:
+    edad_muertes[animal].append(animal[edad])
+    cant_muertes[animal] +=1
