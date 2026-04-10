@@ -56,14 +56,29 @@ for turnos in range(100):
      copia_matriz = snapshot(matriz)
     
     # Se pasa la matriz, el mapa y las variables que necesitan
-     movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc)
-     movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz)
+     movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes)
+     movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes)
     
      reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
      reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
     
      extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
 
-print(edad_muertes)
-     
-     
+edades_conejos = sum(edad_muertes["conejo"])
+edades_zorros = sum(edad_muertes["zorro"])
+
+total_muertes_conejos = cant_muertes["conejo"]
+total_muertes_zorros = cant_muertes["zorro"]
+
+print(f"Muertes regsitradas - Conejos: {total_muertes_conejos} | Zorros: {total_muertes_zorros}")
+if total_muertes_conejos > 0:
+    esperanza_conejos = edades_conejos / total_muertes_conejos
+    print(f"La esperanza de vida de los conejos es: {esperanza_conejos:.2f} turnos")
+else:
+    print("No hubo muertes de conejos")
+
+if total_muertes_zorros > 0:
+    esperanza_zorros = edades_zorros / total_muertes_zorros
+    print(f"La esperanza de vida de los zorros es: {esperanza_zorros:.2f} turnos")
+else:
+    print("No hubieron muertes de zorros")

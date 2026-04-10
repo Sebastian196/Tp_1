@@ -64,7 +64,7 @@ def extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp):
                 mapa_cordenadas["pasto"].add((x, y))
                 mapa_cordenadas["vacio"].remove((x, y))
 
-def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino_posible2, matriz, mapa_cordenadas, N, pasto, ganancia_energia):
+def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino_posible2, matriz, mapa_cordenadas, N, pasto, ganancia_energia, cant_muertes, edad_muertes):
     lista_animal = list(mapa_cordenadas[tipo_animal])
     for x, y in lista_animal:
         animal = matriz[x][y]
@@ -81,8 +81,10 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
             matriz[x][y] = None
             mapa_cordenadas[tipo_animal].discard((x, y)) 
             mapa_cordenadas["vacio"].add((x, y))
-            edad_muertes[animal].append(animal["edad"])
-            cant_muertes[animal] +=1
+            
+            tipo_actual = animal["tipo"]
+            edad_muertes[tipo_actual].append(animal["edad"])
+            cant_muertes[tipo_actual] += 1
             continue
 
         vecinos_posibles = [] 

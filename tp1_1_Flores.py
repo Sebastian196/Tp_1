@@ -34,6 +34,22 @@ mapa_cordenadas = {
     "vacio" : set()
 }
 
+edad_muerte_conejos = []
+edad_muerte_zorros = []
+
+cant_muertes_conejos = 0
+cant_muertes_zorros = 0
+
+cant_muertes = {
+    "conejo": cant_muertes_conejos,
+    "zorro": cant_muertes_zorros,
+}
+
+edad_muertes = {
+    "conejo" : edad_muerte_conejos,
+    "zorro": edad_muerte_zorros,
+}
+
 matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto)
 
 for turno in range(tmax): 
@@ -41,8 +57,8 @@ for turno in range(tmax):
     copia_matriz = snapshot(matriz)
     
     # Se pasa la matriz, el mapa y las variables que necesitan
-    movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc)
-    movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz)
+    movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes)
+    movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes)
     
     reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
     reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
