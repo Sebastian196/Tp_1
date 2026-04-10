@@ -3,16 +3,16 @@ import copy
 from termcolor import colored
 import time
 
-def celdas(conejo, zorro, pasto):
+def celdas(conejo, zorro, pasto, dc, dz, dp):
     prob = random.random()
-    if prob <= 0.12: #conejo
+    if prob <= dc: 
         return copy.deepcopy(conejo)
-    elif 0.12 < prob <= 0.32: #zorro
+    elif dc < prob <= (dc + dz): 
         return copy.deepcopy(zorro)
-    elif 0.32 < prob <= 0.67: #pasto
+    elif (dc + dz) < prob <= (dc + dz + dp): 
         return pasto
     else:
-        return None   
+        return None
 
 def busqueda_de_cordenadas(valor, cordenada_actual, mapa_cordenadas):
     if valor is None:
@@ -26,12 +26,12 @@ def busqueda_de_cordenadas(valor, cordenada_actual, mapa_cordenadas):
         elif tipo_de_animal == "zorro":
             mapa_cordenadas["zorros"].add(cordenada_actual)
 
-def crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto):
+def crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp):
     matriz = []
     for fila in range(N):
         matriz.append([]) 
         for columna in range(N): 
-            valor = celdas(conejo, zorro, pasto) 
+            valor = celdas(conejo, zorro, pasto, dc, dz, dp)
             matriz[fila].append(valor) 
             cordenada_actual = (fila, columna)
             busqueda_de_cordenadas(valor, cordenada_actual, mapa_cordenadas)

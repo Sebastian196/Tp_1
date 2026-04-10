@@ -55,30 +55,45 @@ dz = 0.01
 simulaciones_a_realizar = 50 
 
 
-matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto)
-
 
 while dz < 0.39:
     num_extinciones = 0 
     for i in range(simulaciones_a_realizar): 
-        copia_matriz = snapshot(matriz)
+        mapa_cordenadas = {
+            "conejos" : set(), 
+            "zorros" : set(), 
+            "pasto" : set(), 
+            "vacio" : set()
+            }
+        cant_muertes = {
+            "conejo": 0, 
+            "zorro": 0
+            }
+        edad_muertes = {
+            "conejo": [], 
+            "zorro": []
+            }
+        matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp)
         
      #Realizo la simulación
-        movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes)
-        movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes)
-        
-        reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
-        reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
-        
-        extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
-        
-        # Evalúa la condición de fin de simulación
-        if len(mapa_cordenadas["conejos"]) == 0 or len(mapa_cordenadas["zorros"]) == 0:
-            num_extinciones += 1
+        for turno in range(tmax):
+            copia_matriz = snapshot(matriz)
+            movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes)
+            movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes)
+            
+            reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
+            reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
+            
+            extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
+            
+            # Evalúa la condición de fin de simulación
+            if len(mapa_cordenadas["conejos"]) == 0 or len(mapa_cordenadas["zorros"]) == 0:
+                num_extinciones += 1
+                break
     
-    porcentaje_extinción = (num_extinciones * 100)/simulaciones_a_realizar
+    porcentaje_extinción = (num_extinciones * 100) / simulaciones_a_realizar
     print("--------------------------------------------")
-    print(f"|dz: {dz:0.2f} | Porcentaje de extinciones: {porcentaje_extinción}|")
+    print(f"|dz: {dz:0.2f} | Porcentaje de extinciones: {porcentaje_extinción}% |")
     print("---------------------------------------------")
     dz += 0.02
 
