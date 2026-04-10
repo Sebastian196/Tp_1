@@ -35,6 +35,12 @@ mapa_cordenadas = {
     "vacio" : set()
 }
 
+cant_muertes_conejos = 0
+cant_muertes_zorros = 0
+
+edad_muerte_conejos = []
+edad_muerte_zorros = []
+
 cant_muertes = {
     "conejo": cant_muertes_conejos,
     "zorro": cant_muertes_zorros,

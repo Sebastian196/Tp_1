@@ -81,7 +81,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
             matriz[x][y] = None
             mapa_cordenadas[tipo_animal].discard((x, y)) 
             mapa_cordenadas["vacio"].add((x, y))
-            edad_muertes[animal].append(animal[edad])
+            edad_muertes[animal].append(animal["edad"])
             cant_muertes[animal] +=1
             continue
 
