@@ -4,7 +4,8 @@ from termcolor import colored
 import time
 
 def celdas(conejo, zorro, pasto, dc, dz, dp):
-    prob = random.random()
+
+    prob = random.random() #genero un número random
     if prob <= dc: 
         return copy.deepcopy(conejo)
     elif dc < prob <= (dc + dz): 
@@ -31,10 +32,10 @@ def crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp):
     for fila in range(N):
         matriz.append([]) 
         for columna in range(N): 
-            valor = celdas(conejo, zorro, pasto, dc, dz, dp)
-            matriz[fila].append(valor) 
+            valor = celdas(conejo, zorro, pasto, dc, dz, dp) 
+            matriz[fila].append(valor) #le asigno un valor a las celdas utilizando la funcion celdas()
             cordenada_actual = (fila, columna)
-            busqueda_de_cordenadas(valor, cordenada_actual, mapa_cordenadas)
+            busqueda_de_cordenadas(valor, cordenada_actual, mapa_cordenadas) #a medida que 
     return matriz
 
 def obtener_coordenadas_vecinas(x, y, N):
@@ -43,7 +44,7 @@ def obtener_coordenadas_vecinas(x, y, N):
     for difx, dify in direciones_a_revisar:
         x_a_revisar = x + difx
         y_a_revisar = y + dify
-        if 0 <= x_a_revisar < N and 0 <= y_a_revisar < N:
+        if 0 <= x_a_revisar < N and 0 <= y_a_revisar < N: #me aseguro de que la cordenada este dentro de la matríz creada
             coordenadas_validas.append((x_a_revisar, y_a_revisar))
     return coordenadas_validas
 

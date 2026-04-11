@@ -50,11 +50,13 @@ edad_muertes = {
     "zorro": edad_muerte_zorros,
 }
 
-matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto)
+matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp)
 
 for turno in range(tmax): 
     imprimir_matriz(N, matriz, mapa_cordenadas, turno)
     copia_matriz = snapshot(matriz)
+    
+    extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
     
     # Se pasa la matriz, el mapa y las variables que necesitan
     movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
@@ -63,7 +65,7 @@ for turno in range(tmax):
     reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
     reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
     
-    extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
+    
     
     # Evalúa la condición de fin de simulación
     if len(mapa_cordenadas["conejos"]) == 0 or len(mapa_cordenadas["zorros"]) == 0:

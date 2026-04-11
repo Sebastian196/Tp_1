@@ -56,7 +56,7 @@ simulaciones_a_realizar = 50
 
 
 
-while dz < 0.39:
+while dz <= 0.39:
     num_extinciones = 0 
     for i in range(simulaciones_a_realizar): 
         mapa_cordenadas = {
@@ -78,23 +78,25 @@ while dz < 0.39:
      #Realizo la simulación
         for turno in range(tmax):
             copia_matriz = snapshot(matriz)
+            
+            extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
+            
             movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
             movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
     
             reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
             reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
             
-            extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
+            
             
             # Evalúa la condición de fin de simulación
             if len(mapa_cordenadas["conejos"]) == 0 or len(mapa_cordenadas["zorros"]) == 0:
                 num_extinciones += 1
                 break
     
-    porcentaje_extinción = (num_extinciones * 100) / simulaciones_a_realizar
+    porcentaje_sin_extinción = 100 - ((num_extinciones * 100) / simulaciones_a_realizar)
     print("--------------------------------------------")
-    print(f"|dz: {dz:0.2f} | Porcentaje de extinciones: {porcentaje_extinción}% |")
+    print(f"|dz: {dz:0.2f} | Porcentaje sin extinciones: {porcentaje_sin_extinción}% |")
     print("---------------------------------------------")
     dz += 0.02
-
 
