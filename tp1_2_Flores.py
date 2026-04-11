@@ -53,8 +53,8 @@ for simulacion in range(100):
         
         extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
         
-        movimiento_animales("conejo", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
         movimiento_animales("zorro", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
+        movimiento_animales("conejo", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
         
         reproduccion_animales("conejo", prc, emin, ec, matriz, mapa_cordenadas, N)
         reproduccion_animales("zorro", prz, emin, ez, matriz, mapa_cordenadas, N)
