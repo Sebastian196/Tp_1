@@ -139,10 +139,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
     for x, y in lista_animal:
         animal = matriz[x][y]
         
-        # El parámetro tipo_animal viene en plural ("conejos", "zorros").
-        # Usamos el slicing [:-1] para borrar la última letra (la "s") y obtener el singular ("conejo", "zorro")
-        # Esto permite compararlo correctamente con el valor guardado en el diccionario bajo la clave "tipo".
-        if animal == None or animal == pasto or animal.get("tipo") != tipo_animal[:-1]: #tengo que usar slicing para tener el tipo de forma correcta
+        if animal == None or animal == pasto or animal.get("tipo") != tipo_animal: 
             mapa_cordenadas[tipo_animal].discard((x, y))
             continue
             
@@ -150,7 +147,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
         animal["energia"] -= energia_a_restar 
         animal["edad"] += 1 
         
-        # Analizo el caso de muerte por energía
+        #analizo el caso de muerte
         if animal["energia"] <= 0:
             matriz[x][y] = None
             mapa_cordenadas[tipo_animal].discard((x, y)) 
@@ -165,31 +162,27 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
         coordenadas_vecinas = obtener_coordenadas_vecinas(x, y, N)
         
         for nx, ny in coordenadas_vecinas:
-            # Consultamos la copia estática del inicio del turno
             celda_vecina_copia = copia_matriz[nx][ny]
             
             es_vacio = (celda_vecina_copia == None)
             es_pasto = (celda_vecina_copia == pasto)
             
-            # Verificación en cascada: asegura que no sea vacío, ni pasto, antes de usar .get()
-            es_conejo = (celda_vecina_copia != None and celda_vecina_copia != pasto and celda_vecina_copia.get("tipo") == "conejo")
+            es_conejo = (celda_vecina_copia != None and celda_vecina_copia != pasto and celda_vecina_copia.get("tipo") == "conejo")#agrego este filtro de seguridad porque antes me daba error
              
             if (destino_posible1 == pasto or destino_posible2 == pasto) and es_pasto == True:
                 vecinos_posibles.append((nx, ny))
             elif (destino_posible1 == None or destino_posible2 == None) and es_vacio == True:
                 vecinos_posibles.append((nx, ny))
-            elif tipo_animal == "zorros" and es_conejo == True:
+            elif tipo_animal == "zorro" and es_conejo == True:
                 vecinos_posibles.append((nx, ny))
 
         if len(vecinos_posibles) > 0:
             nuevoX, nuevoY = random.choice(vecinos_posibles)
             
-            # Consultamos el estado actual y real de la matriz en la coordenada elegida
             celda_destino = matriz[nuevoX][nuevoY]
             
             if celda_destino != None and celda_destino != pasto:
-                # Si soy un conejo y me muevo a donde justo acaba de llegar un zorro
-                if tipo_animal == "conejos" and celda_destino.get("tipo") == "zorro":
+                if tipo_animal == "conejo" and celda_destino.get("tipo") == "zorro":
                     celda_destino["energia"] += ganancia_energia
                     cant_muertes["conejo"] += 1
                     edad_muertes["conejo"].append(animal["edad"])
@@ -197,31 +190,30 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
                     mapa_cordenadas[tipo_animal].discard((x, y))
                     mapa_cordenadas["vacio"].add((x, y))
                     continue 
-                # Si en el destino ya se ubicó un animal de mi misma especie
-                elif celda_destino.get("tipo") == tipo_animal[:-1]:
-                    continue # El lugar está ocupado por un aliado, el movimiento se cancela y me quedo en origen
+                elif celda_destino.get("tipo") == tipo_animal:
+                    continue 
 
-            # Zorro comiendo conejo en la matriz real
-            if tipo_animal == "zorros" and celda_destino != None and celda_destino != pasto and celda_destino.get("tipo") == "conejo":
+            #caso en el que un zorro se come a un conejo
+            if tipo_animal == "zorro" and celda_destino != None and celda_destino != pasto and celda_destino.get("tipo") == "conejo":
                 cant_muertes["conejo"] += 1
                 edad_muertes["conejo"].append(celda_destino["edad"])
-                mapa_cordenadas["conejos"].discard((nuevoX, nuevoY))
+                mapa_cordenadas["conejo"].discard((nuevoX, nuevoY))
                 animal["energia"] += ganancia_energia
             
-            # Lógica normal de limpieza en el mapa de coordenadas para pasto y vacío
+            
             if (nuevoX, nuevoY) in mapa_cordenadas["pasto"]:
                 mapa_cordenadas["pasto"].discard((nuevoX, nuevoY))
-                if tipo_animal == "conejos": 
+                if tipo_animal == "conejo": 
                     animal["energia"] += ganancia_energia
                     
             elif (nuevoX, nuevoY) in mapa_cordenadas["vacio"]:
                 mapa_cordenadas["vacio"].discard((nuevoX, nuevoY))
 
-            # Ejecución final del movimiento
+         
             matriz[nuevoX][nuevoY] = animal 
             matriz[x][y] = None
             
-            # Actualización del registro de coordenadas
+            #actualizacio el diccionario de coordenadas
             mapa_cordenadas[tipo_animal].discard((x, y)) 
             mapa_cordenadas[tipo_animal].add((nuevoX, nuevoY)) 
             mapa_cordenadas["vacio"].add((x, y))
