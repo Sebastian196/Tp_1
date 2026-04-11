@@ -78,9 +78,9 @@ while dz < 0.39:
      #Realizo la simulación
         for turno in range(tmax):
             copia_matriz = snapshot(matriz)
-            movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes)
-            movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes)
-            
+            movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
+            movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
+    
             reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
             reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
             
