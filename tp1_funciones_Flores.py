@@ -44,9 +44,9 @@ def busqueda_de_cordenadas(valor, cordenada_actual, mapa_cordenadas):
      else:
          tipo_de_animal = valor['tipo']
          if tipo_de_animal == "conejo":
-            mapa_cordenadas["conejos"].add(cordenada_actual)
+            mapa_cordenadas["conejo"].add(cordenada_actual)
          elif tipo_de_animal == "zorro":
-            mapa_cordenadas["zorros"].add(cordenada_actual)
+            mapa_cordenadas["zorro"].add(cordenada_actual)
 
 def crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp):
      """
@@ -114,7 +114,7 @@ def extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp):
                  pasto_cercano = True
                  break 
                 
-         if pasto_cercano == True:
+         if pasto_cercano:
              prob = random.random()
              if prob <= pp:
                  matriz[x][y] = pasto
@@ -139,7 +139,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
     for x, y in lista_animal:
         animal = matriz[x][y]
         
-        if animal == None or animal == pasto or animal.get("tipo") != tipo_animal: 
+        if animal is None or animal == pasto or animal.get("tipo") != tipo_animal: 
             mapa_cordenadas[tipo_animal].discard((x, y))
             continue
             
@@ -164,16 +164,16 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
         for nx, ny in coordenadas_vecinas:
             celda_vecina_copia = copia_matriz[nx][ny]
             
-            es_vacio = (celda_vecina_copia == None)
+            es_vacio = (celda_vecina_copia is None)
             es_pasto = (celda_vecina_copia == pasto)
             
-            es_conejo = (celda_vecina_copia != None and celda_vecina_copia != pasto and celda_vecina_copia.get("tipo") == "conejo")#agrego este filtro de seguridad porque antes me daba error
+            es_conejo = (celda_vecina_copia is not None and celda_vecina_copia != pasto and celda_vecina_copia.get("tipo") == "conejo")#agrego este filtro de seguridad porque antes me daba error
              
-            if (destino_posible1 == pasto or destino_posible2 == pasto) and es_pasto == True:
+            if (destino_posible1 == pasto or destino_posible2 == pasto) and es_pasto:
                 vecinos_posibles.append((nx, ny))
-            elif (destino_posible1 == None or destino_posible2 == None) and es_vacio == True:
+            elif (destino_posible1 is None or destino_posible2 is None) and es_vacio:
                 vecinos_posibles.append((nx, ny))
-            elif tipo_animal == "zorro" and es_conejo == True:
+            elif tipo_animal == "zorro" and es_conejo:
                 vecinos_posibles.append((nx, ny))
 
         if len(vecinos_posibles) > 0:
@@ -181,7 +181,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
             
             celda_destino = matriz[nuevoX][nuevoY]
             
-            if celda_destino != None and celda_destino != pasto:
+            if celda_destino is not None and celda_destino != pasto:
                 if tipo_animal == "conejo" and celda_destino.get("tipo") == "zorro":
                     celda_destino["energia"] += ganancia_energia
                     cant_muertes["conejo"] += 1
@@ -194,7 +194,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
                     continue 
 
             #caso en el que un zorro se come a un conejo
-            if tipo_animal == "zorro" and celda_destino != None and celda_destino != pasto and celda_destino.get("tipo") == "conejo":
+            if tipo_animal == "zorro" and celda_destino is not None and celda_destino != pasto and celda_destino.get("tipo") == "conejo":
                 cant_muertes["conejo"] += 1
                 edad_muertes["conejo"].append(celda_destino["edad"])
                 mapa_cordenadas["conejo"].discard((nuevoX, nuevoY))
@@ -262,8 +262,8 @@ def imprimir_matriz(N, matriz, mapa_cordenadas, turno):
         mapa_cordenadas (dict): diccionario para contar animales vivos de forma eficiente
         turno (int): número turnos efectuados 
     """
-    conejos_vivos = len(mapa_cordenadas["conejos"])
-    zorros_vivos = len(mapa_cordenadas["zorros"])
+    conejos_vivos = len(mapa_cordenadas["conejo"])
+    zorros_vivos = len(mapa_cordenadas["zorro"])
     
     print("-------------------------")
     print(f"Turno: {turno+1} 🐇Conejos: {conejos_vivos} 🦊Zorros: {zorros_vivos}")
@@ -283,6 +283,16 @@ def imprimir_matriz(N, matriz, mapa_cordenadas, turno):
     time.sleep(0.1)
 
 def snapshot(matriz):
+    """
+    creo el snapshot
+
+    Args:
+        matriz (list): La grilla original a copiar.
+
+    Returns:
+        list: una copia independiente de toda la estructura de la matriz.
+    """
+    return copy.deepcopy(matriz)
     """
     creo el snapshot
 

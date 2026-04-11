@@ -16,54 +16,51 @@ emin = 4 # eng necesaia para que un animal pueda reproducirse
 tmax = 200
 
 conejo = {
-    'tipo' : 'conejo',
+    'tipo': 'conejo',
     'energia': ec,
     'edad': 0
 }
 zorro = {
-    'tipo' : 'zorro',
+    'tipo': 'zorro',
     'energia': ez,
     'edad': 0
 }
 
 pasto = 'pasto'
 
-mapa_cordenadas = {
-    "conejo" : set(),
-    "zorro" : set(),
-    "pasto" : set(),
-    "vacio" : set()
-}
-
-cant_muertes_conejos = 0
-cant_muertes_zorros = 0
-
-edad_muerte_conejos = []
-edad_muerte_zorros = []
-
 cant_muertes = {
-    "conejo": cant_muertes_conejos,
-    "zorro": cant_muertes_zorros,
+    "conejo": 0,
+    "zorro": 0,
 }
 
 edad_muertes = {
-    "conejo" : edad_muerte_conejos,
-    "zorro": edad_muerte_zorros,
+    "conejo": [],
+    "zorro": [],
 }
 
-matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp)
-for turnos in range(100):
-     copia_matriz = snapshot(matriz)
-     
-     extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
-    # Se pasa la matriz, el mapa y las variables que necesitan
-     movimiento_animales("conejo", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
-     movimiento_animales("zorro", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
+for simulacion in range(100):
+    mapa_cordenadas = {
+        "conejo": set(),
+        "zorro": set(),
+        "pasto": set(),
+        "vacio": set()
+    }
     
-     reproduccion_animales("conejo", prc, emin, ec, matriz, mapa_cordenadas, N)
-     reproduccion_animales("zorro", prz, emin, ez, matriz, mapa_cordenadas, N)
+    matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp)
     
-     
+    for turno in range(tmax):
+        copia_matriz = snapshot(matriz)
+        
+        extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
+        
+        movimiento_animales("conejo", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
+        movimiento_animales("zorro", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
+        
+        reproduccion_animales("conejo", prc, emin, ec, matriz, mapa_cordenadas, N)
+        reproduccion_animales("zorro", prz, emin, ez, matriz, mapa_cordenadas, N)
+        
+        if len(mapa_cordenadas["conejo"]) == 0 or len(mapa_cordenadas["zorro"]) == 0:
+            break
 
 edades_conejos = sum(edad_muertes["conejo"])
 edades_zorros = sum(edad_muertes["zorro"])
@@ -71,15 +68,9 @@ edades_zorros = sum(edad_muertes["zorro"])
 total_muertes_conejos = cant_muertes["conejo"]
 total_muertes_zorros = cant_muertes["zorro"]
 
-print(f"Muertes regsitradas - Conejos: {total_muertes_conejos} | Zorros: {total_muertes_zorros}")
-if total_muertes_conejos > 0:
-    esperanza_conejos = edades_conejos / total_muertes_conejos
-    print(f"La esperanza de vida de los conejos es: {esperanza_conejos:.2f} turnos")
-else:
-    print("No hubo muertes de conejos")
+esperanza_conejo = edades_conejos / total_muertes_conejos if total_muertes_conejos > 0 else 0
+esperanza_zorro = edades_zorros / total_muertes_zorros if total_muertes_zorros > 0 else 0
 
-if total_muertes_zorros > 0:
-    esperanza_zorros = edades_zorros / total_muertes_zorros
-    print(f"La esperanza de vida de los zorros es: {esperanza_zorros:.2f} turnos")
-else:
-    print("No hubieron muertes de zorros")
+print(f"Muertes registradas - Conejos: {total_muertes_conejos} | Zorros: {total_muertes_zorros}")
+print(f"Esperanza de vida - Conejos: {esperanza_conejo:.2f}")
+print(f"Esperanza de vida - Zorros: {esperanza_zorro:.2f}")

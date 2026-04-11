@@ -27,52 +27,31 @@ zorro = {
 
 pasto = 'pasto'
 
-mapa_cordenadas = {
-    "conejo" : set(),
-    "zorro" : set(),
-    "pasto" : set(),
-    "vacio" : set()
-}
-
-edad_muerte_conejos = []
-edad_muerte_zorros = []
-
-cant_muertes_conejos = 0
-cant_muertes_zorros = 0
-
-cant_muertes = {
-    "conejo": cant_muertes_conejos,
-    "zorro": cant_muertes_zorros,
-}
-
-edad_muertes = {
-    "conejo" : edad_muerte_conejos,
-    "zorro": edad_muerte_zorros,
-}
-
-
-dz = 0.01
 simulaciones_a_realizar = 50 
 
+print("---------------------------")
+print("| d_z   | Sin extinciones    |")
+print("---------------------------")
 
-
-while dz <= 0.39:
+for paso in range(20):
+    dz = round(0.01 + paso * 0.02, 2)
     num_extinciones = 0 
+    
     for i in range(simulaciones_a_realizar): 
         mapa_cordenadas = {
             "conejo" : set(), 
             "zorro" : set(), 
             "pasto" : set(), 
             "vacio" : set()
-            }
+        }
         cant_muertes = {
             "conejo": 0, 
             "zorro": 0
-            }
+        }
         edad_muertes = {
             "conejo": [], 
             "zorro": []
-            }
+        }
         matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp)
         
      #Realizo la simulación
@@ -87,16 +66,13 @@ while dz <= 0.39:
             reproduccion_animales("conejo", prc, emin, ec, matriz, mapa_cordenadas, N)
             reproduccion_animales("zorro", prz, emin, ez, matriz, mapa_cordenadas, N)
             
-            
-            
             # Evalúa la condición de fin de simulación
             if len(mapa_cordenadas["conejo"]) == 0 or len(mapa_cordenadas["zorro"]) == 0:
                 num_extinciones += 1
                 break
     
-    porcentaje_sin_extinción = 100 - ((num_extinciones * 100) / simulaciones_a_realizar)
-    print("--------------------------------------------")
-    print(f"|dz: {dz:0.2f} | Porcentaje sin extinciones: {porcentaje_sin_extinción}% |")
-    print("---------------------------------------------")
-    dz += 0.02
+    porcentaje_sin_extincion = 100 - ((num_extinciones * 100) / simulaciones_a_realizar)
+    
+    print(f"| {dz:0.2f} | {porcentaje_sin_extincion:0.2f} %           |")
+    print("---------------------------")
 
