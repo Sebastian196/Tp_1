@@ -20,9 +20,9 @@ def celdas(conejo, zorro, pasto, dc, dz, dp):
      """
      prob = random.random() #genero un número random
      if prob <= dc: 
-         return copy.deepcopy(conejo)
+         return copy.deepcopy(conejo) #creo un conejo
      elif dc < prob <= (dc + dz): 
-         return copy.deepcopy(zorro)
+         return copy.deepcopy(zorro) #creo un zorro
      elif (dc + dz) < prob <= (dc + dz + dp): 
          return pasto
      else:
@@ -54,7 +54,7 @@ def crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp):
 
      Args:
         N (int): tamaño de la matríz
-        mapa_cordenadas (dict): estructura para registrar las posiciones iniciales
+        mapa_cordenadas (dict): diccionario para registrar las posiciones iniciales
         conejo, zorro, pasto: elementos con los que poblar la matríz
         dc, dz, dp (float): densidades para la generación aleatoria
 
@@ -118,7 +118,7 @@ def extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp):
              prob = random.random()
              if prob <= pp:
                  matriz[x][y] = pasto
-                 #actualizo el diccionario de cordenadas
+                 #actualizo mi diccionario de cordenadas
                  mapa_cordenadas["pasto"].add((x, y)) 
                  mapa_cordenadas["vacio"].remove((x, y))
 
@@ -139,11 +139,11 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
     for x, y in lista_animal:
         animal = matriz[x][y]
         
-        if animal is None or animal == pasto or animal.get("tipo") != tipo_animal: 
+        if animal == None or animal == pasto or animal.get("tipo") != tipo_animal: 
             mapa_cordenadas[tipo_animal].discard((x, y))
             continue
             
-        animal["origen"] = (x, y) 
+        animal["origen"] = (x, y) #creo una clave para almacenar las cordenadas de partida
         animal["energia"] -= energia_a_restar 
         animal["edad"] += 1 
         
@@ -167,7 +167,7 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
             es_vacio = (celda_vecina_copia is None)
             es_pasto = (celda_vecina_copia == pasto)
             
-            es_conejo = (celda_vecina_copia is not None and celda_vecina_copia != pasto and celda_vecina_copia.get("tipo") == "conejo")#agrego este filtro de seguridad porque antes me daba error
+            es_conejo = (celda_vecina_copia != None and celda_vecina_copia != pasto and celda_vecina_copia.get("tipo") == "conejo")#agrego este filtro de seguridad porque antes me daba error
              
             if (destino_posible1 == pasto or destino_posible2 == pasto) and es_pasto:
                 vecinos_posibles.append((nx, ny))
@@ -176,12 +176,15 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
             elif tipo_animal == "zorro" and es_conejo:
                 vecinos_posibles.append((nx, ny))
 
+        #ahora miro a los vecinos
         if len(vecinos_posibles) > 0:
-            nuevoX, nuevoY = random.choice(vecinos_posibles)
+            nuevoX, nuevoY = random.choice(vecinos_posibles) #elijo un vecino random
             
             celda_destino = matriz[nuevoX][nuevoY]
             
+            
             if celda_destino is not None and celda_destino != pasto:
+                #analizo el caso en el que un conejo va hacia un zorro
                 if tipo_animal == "conejo" and celda_destino.get("tipo") == "zorro":
                     celda_destino["energia"] += ganancia_energia
                     cant_muertes["conejo"] += 1
@@ -190,10 +193,11 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
                     mapa_cordenadas[tipo_animal].discard((x, y))
                     mapa_cordenadas["vacio"].add((x, y))
                     continue 
-                elif celda_destino.get("tipo") == tipo_animal:
+                #caso en el que el conejo se encuenytra con un conejo
+                elif celda_destino.get("tipo") == tipo_animal: 
                     continue 
 
-            #caso en el que un zorro se come a un conejo
+            #caso en el que el animal se encuentra con otro de su misma especie
             if tipo_animal == "zorro" and celda_destino is not None and celda_destino != pasto and celda_destino.get("tipo") == "conejo":
                 cant_muertes["conejo"] += 1
                 edad_muertes["conejo"].append(celda_destino["edad"])
@@ -204,16 +208,16 @@ def movimiento_animales(tipo_animal, energia_a_restar, destino_posible1, destino
             if (nuevoX, nuevoY) in mapa_cordenadas["pasto"]:
                 mapa_cordenadas["pasto"].discard((nuevoX, nuevoY))
                 if tipo_animal == "conejo": 
-                    animal["energia"] += ganancia_energia
+                    animal["energia"] += ganancia_energia #el conejo come pasto y gana energía
                     
             elif (nuevoX, nuevoY) in mapa_cordenadas["vacio"]:
                 mapa_cordenadas["vacio"].discard((nuevoX, nuevoY))
 
-         
+            #actualizo la nueva posición en la matriz principal y libero la celda de origen
             matriz[nuevoX][nuevoY] = animal 
             matriz[x][y] = None
             
-            #actualizacio el diccionario de coordenadas
+            #actualizo mi diccionario de coordenadas
             mapa_cordenadas[tipo_animal].discard((x, y)) 
             mapa_cordenadas[tipo_animal].add((nuevoX, nuevoY)) 
             mapa_cordenadas["vacio"].add((x, y))
@@ -234,16 +238,15 @@ def reproduccion_animales(tipo_animal, prob_repro, energia_minima, energia_hijo,
     for x, y in lista_animal:
         animal = matriz[x][y]
         
-        if animal is None or type(animal) != dict:
-            continue
+        if animal == None or type(animal) != dict:
+            continue #ignora elementos que no sean animales
             
         if animal["energia"] >= energia_minima:
             if random.random() <= prob_repro:
-                origen = animal.get("origen")
+                origen = animal.get("origen") #uso el .get porque es mas flexible y me evita fallos
                 if origen:
-                    hx, hy = origen
-                    # Verificamos si la celda de origen realmente quedó vacía
-                    if (hx, hy) in mapa_cordenadas["vacio"]:
+                    hx, hy = origen #le asignamos al hijo las cordenadas viejas del padre
+                    if (hx, hy) in mapa_cordenadas["vacio"]: #verifico si la celda de origen quedó vacía
                         nuevo_animal = copy.deepcopy(animal)
                         nuevo_animal["energia"] = energia_hijo 
                         nuevo_animal["edad"] = 0 
@@ -283,16 +286,6 @@ def imprimir_matriz(N, matriz, mapa_cordenadas, turno):
     time.sleep(0.1)
 
 def snapshot(matriz):
-    """
-    creo el snapshot
-
-    Args:
-        matriz (list): La grilla original a copiar.
-
-    Returns:
-        list: una copia independiente de toda la estructura de la matriz.
-    """
-    return copy.deepcopy(matriz)
     """
     creo el snapshot
 

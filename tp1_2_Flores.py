@@ -72,5 +72,5 @@ esperanza_conejo = edades_conejos / total_muertes_conejos if total_muertes_conej
 esperanza_zorro = edades_zorros / total_muertes_zorros if total_muertes_zorros > 0 else 0
 
 print(f"Muertes registradas - Conejos: {total_muertes_conejos} | Zorros: {total_muertes_zorros}")
-print(f"Esperanza de vida - Conejos: {esperanza_conejo:.2f}")
-print(f"Esperanza de vida - Zorros: {esperanza_zorro:.2f}")
+print(f"Esperanza de vida del conejo: {esperanza_conejo:.2f} turnos")
+print(f"Esperanza de vida del zorro: {esperanza_zorro:.2f} turnos")

@@ -29,9 +29,10 @@ pasto = 'pasto'
 
 simulaciones_a_realizar = 50 
 
-print("---------------------------")
-print("| d_z   | Sin extinciones    |")
-print("---------------------------")
+#encabezado de la tabla
+print("+--------+---------------------+")
+print("| d_z    | Sin extinciones     |")
+print("+--------+---------------------+")
 
 for paso in range(20):
     dz = round(0.01 + paso * 0.02, 2)
@@ -54,7 +55,6 @@ for paso in range(20):
         }
         matriz = crear_matriz(N, mapa_cordenadas, conejo, zorro, pasto, dc, dz, dp)
         
-     #Realizo la simulación
         for turno in range(tmax):
             copia_matriz = snapshot(matriz)
             
@@ -66,13 +66,12 @@ for paso in range(20):
             reproduccion_animales("conejo", prc, emin, ec, matriz, mapa_cordenadas, N)
             reproduccion_animales("zorro", prz, emin, ez, matriz, mapa_cordenadas, N)
             
-            # Evalúa la condición de fin de simulación
+            #caso de exitinción de una especie
             if len(mapa_cordenadas["conejo"]) == 0 or len(mapa_cordenadas["zorro"]) == 0:
                 num_extinciones += 1
                 break
     
-    porcentaje_sin_extincion = 100 - ((num_extinciones * 100) / simulaciones_a_realizar)
+    porcentaje_sin_extincion = 100.0 - ((num_extinciones * 100.0) / simulaciones_a_realizar)
     
-    print(f"| {dz:0.2f} | {porcentaje_sin_extincion:0.2f} %           |")
-    print("---------------------------")
-
+    print(f"| {dz:.2f}   | {porcentaje_sin_extincion:>7.2f} %           |") 
+    print("+--------+---------------------+")
