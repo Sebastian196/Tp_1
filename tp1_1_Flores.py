@@ -28,8 +28,8 @@ zorro = {
 pasto = 'pasto'
 
 mapa_cordenadas = {
-    "conejos" : set(),
-    "zorros" : set(),
+    "conejo" : set(),
+    "zorro" : set(),
     "pasto" : set(),
     "vacio" : set()
 }
@@ -59,15 +59,15 @@ for turno in range(tmax):
     extension_pasto(N, copia_matriz, matriz, mapa_cordenadas, pasto, pp)
     
     # Se pasa la matriz, el mapa y las variables que necesitan
-    movimiento_animales("conejos", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
-    movimiento_animales("zorros", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
+    movimiento_animales("conejo", 1, None, pasto, matriz, mapa_cordenadas, N, pasto, gc, cant_muertes, edad_muertes, copia_matriz)
+    movimiento_animales("zorro", 2, None, pasto, matriz, mapa_cordenadas, N, pasto, gz, cant_muertes, edad_muertes, copia_matriz)
     
-    reproduccion_animales("conejos", prc, emin, ec, matriz, mapa_cordenadas, N)
-    reproduccion_animales("zorros", prz, emin, ez, matriz, mapa_cordenadas, N)
+    reproduccion_animales("conejo", prc, emin, ec, matriz, mapa_cordenadas, N)
+    reproduccion_animales("zorro", prz, emin, ez, matriz, mapa_cordenadas, N)
     
     
     
     # Evalúa la condición de fin de simulación
-    if len(mapa_cordenadas["conejos"]) == 0 or len(mapa_cordenadas["zorros"]) == 0:
+    if len(mapa_cordenadas["conejo"]) == 0 or len(mapa_cordenadas["zorro"]) == 0:
         imprimir_matriz(N, matriz, mapa_cordenadas, turno)
         break
